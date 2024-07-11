@@ -75,6 +75,7 @@ class _SignUpState extends State<SignUp> {
                       setState(() {
                         isFree = false;
                       });
+                      Navigator.of(context).pushReplacementNamed("/home");
                     });
                   }
                 },
@@ -99,6 +100,7 @@ class _SignUpState extends State<SignUp> {
                       setState(() {
                         isEmailAndPassword = false;
                       });
+                      Navigator.of(context).pushReplacementNamed("/home");
                     });
                   }
                 },
@@ -161,6 +163,7 @@ class _SignUpState extends State<SignUp> {
                       setState(() {
                         isGoogle = false;
                       });
+                      Navigator.of(context).pushReplacementNamed("/home");
                     });
                   }
                 },
