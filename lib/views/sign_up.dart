@@ -98,16 +98,17 @@ class _SignUpState extends State<SignUp> {
                 width: 300,
                 color: Colors.black,
                 height: 54,
-                onPressed: () {
+                onPressed: () async {
                   if(!isFree&& !isGoogle ){
                     setState(() {
                       isEmailAndPassword = true;
                     });
 
-                    Future.delayed(Duration(seconds: 4),(){
+                    await service.fetchRandomImages().then((value){
                       setState(() {
                         isEmailAndPassword = false;
                       });
+                      context.read<ImagesProvider>().setImageUrls(value);
                       Navigator.of(context).pushReplacementNamed("/home");
                     });
                   }
@@ -162,15 +163,16 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                onPressed: () {
+                onPressed: ()async {
                   if(!isFree&& !isEmailAndPassword ){
                     setState(() {
                       isGoogle = true;
                     });
-                    Future.delayed(Duration(seconds: 4),(){
+                    await service.fetchRandomImages().then((value){
                       setState(() {
                         isGoogle = false;
                       });
+                      context.read<ImagesProvider>().setImageUrls(value);
                       Navigator.of(context).pushReplacementNamed("/home");
                     });
                   }
