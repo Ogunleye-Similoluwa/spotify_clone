@@ -9,7 +9,7 @@ class ApiService{
   var dio = Dio();
 
   var headers = {
-    'X-Rapidapi-Key': 'ca58e585b0msh7ef08cb3c5200b7p123b2ajsn82fc3d91cea4',
+    'X-Rapidapi-Key': '74fe7ee416msh33894e8bc272c91p17dc4djsn877748461b15',
     'X-Rapidapi-Host': 'spotify-scraper.p.rapidapi.com',
     'Host': 'spotify-scraper.p.rapidapi.com',
   };
