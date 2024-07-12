@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:spotify/views/widgets/song_tile.dart';
 import 'package:spotify/views/widgets/square_tile.dart';
 import '../../controllers/api_service/ApiService.dart';
 import '../../models/song.dart';
+import '../controllers/providers/images_provider.dart';
 import 'library.dart';
 
 
@@ -18,12 +20,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+
+
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
+
+
+  List<Widget>  _widgetOptions = [
     HomeScreen(),
     SearchScreen(),
     LibraryScreen(),
   ];
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -73,27 +81,70 @@ class _HomePageState extends State<HomePage> {
 }
 
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+
+
+  const HomeScreen({super.key });
+
+
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
 
+    return Scaffold(
       backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-            child: Column(
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+          child: SingleChildScrollView(
+            child:
+            context.watch<SongsProvider>().recentSongs.isEmpty ?
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'New Here ?',
+                    style: GoogleFonts.inriaSerif(color: Colors.white, fontSize: 44, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    ' Click the Search button ',
+                    style: GoogleFonts.inriaSerif(color: Colors.white, fontSize: 27, fontWeight: FontWeight.bold),
+                  ),
+
+                  Text(
+                    ' Search for your songs',
+                    style: GoogleFonts.inriaSerif(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+
+
+                  SizedBox(height: 30,),
+
+                  Container(width:800, height:300, decoration: BoxDecoration(borderRadius: BorderRadius.circular(30)),child: ImageSlider(imgList: context.watch<ImagesProvider>().imgUrls),)
+
+
+                ],
+              ),
+            )
+                :
+                 Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Welcome!',
-                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inriaSerif(color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 20),
-                context.read<SongsProvider>().recentSongs.isEmpty?SizedBox.shrink(): Column(
+
+                 context.watch<SongsProvider>().recentSongs.isEmpty?SizedBox.shrink(): Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Recent Songs',
@@ -104,8 +155,9 @@ class HomeScreen extends StatelessWidget {
                     SizedBox(height: 20),
                   ],
                 ),
-        
-               context.read<SongsProvider>().favoriteSongs.isEmpty?SizedBox.shrink(): Column(
+
+               context.watch<SongsProvider>().favoriteSongs.isEmpty?SizedBox.shrink(): Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Liked Songs',
@@ -116,7 +168,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 10),
-        
+
                 // Add more sections as needed
               ],
             ),
@@ -125,6 +177,7 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildRecentSongsList(BuildContext context) {
     List<Song> recentSongs = context.watch<SongsProvider>().recentSongs;
@@ -158,4 +211,20 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-
+class ImageSlider extends StatelessWidget {
+  final List<dynamic> imgList;
+  const ImageSlider({super.key,  required this.imgList});
+  @override
+  Widget build(BuildContext context) {
+    return  CarouselSlider(
+      options: CarouselOptions(
+        autoPlayCurve: Curves.easeInBack,
+        autoPlay: true,
+        aspectRatio: 2.0,
+        enlargeCenterPage: true,),
+      items: imgList
+          .map((item) => Image.network(item, fit: BoxFit.cover,))
+          .toList(),
+    );
+  }
+}

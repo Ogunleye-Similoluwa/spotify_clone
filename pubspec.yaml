@@ -38,14 +38,12 @@ dependencies:
   flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.1
   audioplayers: ^6.0.0
-  file_picker: ^8.0.6
-  audio_session: ^0.1.20
   just_audio: ^0.9.39
   audio_video_progress_bar: ^2.0.3
-  youtube_explode_dart: ^2.2.1
   http: ^1.2.1
   dio: ^5.5.0+1
   provider: ^6.1.2
+  carousel_slider: ^4.2.1
   shared_preferences: ^2.2.3
 
 dev_dependencies:

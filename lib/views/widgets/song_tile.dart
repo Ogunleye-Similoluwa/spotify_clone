@@ -34,7 +34,7 @@ class _SongTileState extends State<SongTile> {
           trailing: IconButton(
             icon: Icon(
               isLiked ? Icons.favorite : Icons.favorite_border,
-              color: isLiked ? Colors.red : Colors.grey,
+              color: isLiked ? Colors.green : Colors.grey,
             ),
             onPressed: () {
               setState(() {
@@ -42,9 +42,15 @@ class _SongTileState extends State<SongTile> {
               });
 
               if (isLiked) {
-                widget.song.setIsLiked(isLiked);
+                setState(() {
+                  widget.song.setIsLiked(isLiked);
+                });
+
                 context.read<SongsProvider>().addFavoriteSong(widget.song);
               } else {
+                setState(() {
+                  widget.song.setIsLiked(isLiked);
+                });
                 context.read<SongsProvider>().removeFavoriteSong(widget.song);
               }
             },

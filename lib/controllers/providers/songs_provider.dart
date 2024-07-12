@@ -7,18 +7,56 @@ class SongsProvider extends ChangeNotifier {
   List<Song> recentSongs = [];
 
   SongsProvider() {
-    _loadFavoriteSongs();
-    _loadRecentSongs();
+    loadFavoriteSongs();
+    loadRecentSongs();
   }
 
-  void addRecentSong(Song song) {
-    recentSongs.add(song);
+  void setRecentSongs(List<Song> song){
+    recentSongs = song;
+    notifyListeners();
+  }
+
+  void setFavoriteSongs(List<Song> song){
+    favoriteSongs = song;
+    notifyListeners();
+  }
+
+  void addRecentSong(Song newSong) {
+    if(recentSongs.isNotEmpty){
+      for (var song in recentSongs) {
+        if( song.musicName != newSong.musicName ){
+          recentSongs.add(newSong);
+        }
+        else if(song.musicName == newSong.musicName){
+          recentSongs.remove(song);
+          recentSongs.add(newSong);
+        }
+      }
+    }
+    else if(recentSongs.isEmpty){
+      recentSongs.add(newSong);
+    }
+    recentSongs = recentSongs.toSet().toList();
     _saveRecentSongs();
     notifyListeners();
   }
 
-  void addFavoriteSong(Song song) {
-    favoriteSongs.add(song);
+  void addFavoriteSong(Song newSong) {
+    if(favoriteSongs.isNotEmpty) {
+      for (var song in favoriteSongs) {
+        if (song.musicName != newSong.musicName) {
+          favoriteSongs.add(newSong);
+        }
+        else if (song.musicName == newSong.musicName){
+          favoriteSongs.remove(song);
+          favoriteSongs.add(newSong);
+        }
+      }
+    }
+    else if(favoriteSongs.isEmpty){
+      favoriteSongs.add(newSong);
+    }
+    favoriteSongs = favoriteSongs.toSet().toList();
     _saveFavoriteSongs();
     notifyListeners();
   }
@@ -29,12 +67,12 @@ class SongsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadFavoriteSongs() async {
+  Future<void> loadFavoriteSongs() async {
     favoriteSongs = await SharedPrefs.getFavoriteSongs();
     notifyListeners();
   }
 
-  Future<void> _loadRecentSongs() async {
+  Future<void> loadRecentSongs() async {
     recentSongs = await SharedPrefs.getRecentSongs();
     notifyListeners();
   }

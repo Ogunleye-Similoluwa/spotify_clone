@@ -25,8 +25,6 @@ class SongTileProvider extends ChangeNotifier {
 
   void setCurrentSongPosition(Song song){
    this._currentSong?.position = song.position;
-   print(currentSong?.position);
-
   }
   Future<void> setCurrentSong(Song song) async {
     _currentSong = song;
@@ -37,8 +35,12 @@ class SongTileProvider extends ChangeNotifier {
   }
 
   Future<void> playAudio() async {
-    print("${currentSong?.position }  here");
     _audioPlayer.play();
+    _saveCurrentState();
+  }
+  Future<void> replayAudio() async {
+    _audioPlayer.seek(Duration.zero);
+    await _audioPlayer.setAudioSource(AudioSource.uri(Uri.parse(_currentSong!.name!)));
     _saveCurrentState();
   }
 
@@ -58,10 +60,7 @@ class SongTileProvider extends ChangeNotifier {
 
   Future<void> _loadLastPlayedSong() async {
     _currentSong = SharedPrefs.getLastSong();
-
-      print(_currentSong?.position);
     if (_currentSong != null) {
-      print(_currentSong!.toJson());
       await setCurrentSong(_currentSong!);
       notifyListeners();
     }

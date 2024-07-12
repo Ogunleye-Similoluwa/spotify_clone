@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:spotify/controllers/providers/songs_provider.dart';
 import 'package:spotify/views/widgets/CustomButton.dart';
 import 'package:spotify/views/widgets/loading.dart';
 import '../constants/media_query_constant/constants.dart';
+import '../controllers/api_service/ApiService.dart';
+import '../controllers/providers/images_provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -16,6 +20,7 @@ class _SignUpState extends State<SignUp> {
   bool isFree = false;
   bool isEmailAndPassword = false;
   bool isGoogle=false;
+  ApiService service = ApiService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,17 +71,19 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
-                onPressed: () {
+                onPressed: ()async {
                   if(!isGoogle&& !isEmailAndPassword ){
                     setState(() {
                       isFree = true;
                     });
-                    Future.delayed(Duration(seconds: 4),(){
+                    await service.fetchRandomImages().then((value){
                       setState(() {
                         isFree = false;
                       });
+                      context.read<ImagesProvider>().setImageUrls(value);
                       Navigator.of(context).pushReplacementNamed("/home");
                     });
+
                   }
                 },
                 shape: RoundedRectangleBorder(
@@ -96,6 +103,7 @@ class _SignUpState extends State<SignUp> {
                     setState(() {
                       isEmailAndPassword = true;
                     });
+
                     Future.delayed(Duration(seconds: 4),(){
                       setState(() {
                         isEmailAndPassword = false;

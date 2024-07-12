@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:spotify/views/widgets/loading.dart';
 import 'package:spotify/views/widgets/song_tile.dart';
 
 import '../controllers/api_service/ApiService.dart';
@@ -18,6 +19,7 @@ class _SearchScreenState extends State<SearchScreen> {
   ApiService service = ApiService();
   List<Song> songs = [];
   String songQuery = "";
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +46,15 @@ class _SearchScreenState extends State<SearchScreen> {
           },
           onSubmitted: (query) {
             if (query.isNotEmpty) {
+              setState(() {
+                isLoading = true;
+              });
               _searchSong(context);
             }
           },
         ),
       ),
-      body: Padding(
+      body: isLoading ? Center(child: Loading(color: Colors.white,)): Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -75,9 +80,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
     try {
       Song song = await service.downloadTrack(songQuery);
-      setState(() {
-        songs = [song];
-      });
+          setState(() {
+            isLoading = false;
+            songs = [song];
+          });
       context.read<SongsProvider>().addRecentSong(song);
     } catch (e) {
       print("Error fetching song: $e");

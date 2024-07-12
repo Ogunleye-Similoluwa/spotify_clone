@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:spotify/router/routeGenerator.dart';
 import 'package:spotify/storage/shared_prefrences.dart';
 
+import 'controllers/providers/images_provider.dart';
 import 'controllers/providers/song_tile_provider.dart';
 import 'controllers/providers/songs_provider.dart';
 
@@ -14,6 +15,7 @@ void main()async {
       providers: [
         ChangeNotifierProvider(create: (_) => SongTileProvider()),
         ChangeNotifierProvider(create: (_) => SongsProvider()),
+        ChangeNotifierProvider(create: (_) => ImagesProvider()),
       ],
       child: MyApp(),
     ),

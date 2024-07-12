@@ -11,15 +11,17 @@ class SharedPrefs {
   static const String _favoriteSongsKey = 'favoriteSongs';
   static const String _recentSongsKey = 'recentSongs';
 
+  static Future init() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
+
   static Future<void> saveSongsList(String key, List<Song> songs) async {
-    final prefs = await SharedPreferences.getInstance();
     final songList = songs.map((song) => song.toJson()).toList();
-    prefs.setString(key, jsonEncode(songList));
+    _preferences?.setString(key, jsonEncode(songList));
   }
 
   static Future<List<Song>> getSongsList(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    final songListJson = prefs.getString(key);
+    final songListJson = _preferences?.getString(key);
     if (songListJson != null) {
       final List<dynamic> songListMap = jsonDecode(songListJson);
       return songListMap.map((json) => Song.fromJson(json)).toList();
@@ -43,12 +45,9 @@ class SharedPrefs {
     return await getSongsList(_recentSongsKey);
   }
 
-  static Future init() async {
-    _preferences = await SharedPreferences.getInstance();
-  }
+
 
   static Future saveCurrentSong(Song song) async {
-    print("${song.toJson()}    from storage");
     await _preferences?.setString(_keyLastSong, song.toJson());
 
   }
@@ -57,7 +56,6 @@ class SharedPrefs {
     final songJson = _preferences?.getString(_keyLastSong);
 
     if (songJson != null) {
-      print(songJson);
       return Song.fromJson(songJson);
     }
     return null;
