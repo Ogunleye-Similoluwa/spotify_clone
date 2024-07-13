@@ -1,6 +1,5 @@
-// import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:spotify/controllers/providers/songs_provider.dart';
@@ -217,7 +216,7 @@ class ImageSlider extends StatelessWidget {
   const ImageSlider({super.key,  required this.imgList});
   @override
   Widget build(BuildContext context) {
-    return FlutterCarousel(
+    return CarouselSlider(
       options: CarouselOptions(
         autoPlayCurve: Curves.easeInBack,
         autoPlay: true,
