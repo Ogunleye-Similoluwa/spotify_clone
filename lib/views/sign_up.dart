@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:spotify/controllers/providers/songs_provider.dart';
 import 'package:spotify/views/widgets/CustomButton.dart';
 import 'package:spotify/views/widgets/loading.dart';
 import '../constants/media_query_constant/constants.dart';
