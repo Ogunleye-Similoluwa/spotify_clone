@@ -37,13 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.1
-  audioplayers: ^6.0.0
   just_audio: ^0.9.39
   audio_video_progress_bar: ^2.0.3
   http: ^1.2.1
   dio: ^5.5.0+1
   provider: ^6.1.2
-  carousel_slider: ^4.2.1
   shared_preferences: ^2.2.3
   flutter_carousel_widget: ^2.2.0
 
