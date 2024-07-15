@@ -1,4 +1,5 @@
 // import 'package:carousel_slider/carousel_slider.dart';
+import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -215,15 +216,19 @@ class ImageSlider extends StatelessWidget {
   const ImageSlider({super.key,  required this.imgList});
   @override
   Widget build(BuildContext context) {
-    return FlutterCarousel(
-      options: CarouselOptions(
-        autoPlayCurve: Curves.easeInBack,
-        autoPlay: true,
-        aspectRatio: 2.0,
-        enlargeCenterPage: true,),
-      items: imgList
-          .map((item) => Image.network(item, fit: BoxFit.cover,))
-          .toList(),
+    return Swiper(
+      itemBuilder: (context, index) {
+        return Image.network(
+          imgList[index],
+          fit: BoxFit.fill,
+        );
+      },
+      autoplay: true,
+      itemCount: imgList.length,
+      scrollDirection: Axis.vertical,
+      pagination: const SwiperPagination(alignment: Alignment.centerRight),
+      control: const SwiperControl(),
     );
   }
 }
+
