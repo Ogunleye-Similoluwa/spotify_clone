@@ -15,11 +15,11 @@ class SongSquareTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<SongTileProvider>(context, listen: false).setCurrentSong(song);
-        Provider.of<SongTileProvider>(context, listen: false).playAudio();
+        Provider.of<SongTileProvider>(context, listen: false).setCurrentSong(context,song);
+        Provider.of<SongTileProvider>(context, listen: false).playAudio(context);
       },
       child: Container(
-        width: 150, // Fixed width for the square tile
+        width: 150,
         margin: const EdgeInsets.symmetric(horizontal: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

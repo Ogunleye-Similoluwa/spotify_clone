@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:spotify/controllers/providers/songs_provider.dart';
 import 'package:spotify/views/widgets/CustomButton.dart';
 import 'package:spotify/views/widgets/loading.dart';
 import '../constants/media_query_constant/constants.dart';
 import '../controllers/api_service/ApiService.dart';
+import '../controllers/api_service/auth_service.dart';
 import '../controllers/providers/images_provider.dart';
+import '../controllers/providers/song_tile_provider.dart';
+import '../controllers/providers/users_provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -20,8 +24,10 @@ class _SignUpState extends State<SignUp> {
   bool isEmailAndPassword = false;
   bool isGoogle=false;
   ApiService service = ApiService();
+  AuthService authService = AuthService();
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         width: getMediaQuerySize(context: context).width,
@@ -57,30 +63,23 @@ class _SignUpState extends State<SignUp> {
                 width: 300,
                 color: Colors.green,
                 height: 54,
-                child: isFree?  Loading(): Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Sign for Free",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 17,
-                      ),
-                    ),
-                  ],
-                ),
                 onPressed: ()async {
-                  if(!isGoogle&& !isEmailAndPassword ){
+                  if(!isGoogle ){
                     setState(() {
                       isFree = true;
                     });
-                    await service.fetchRandomImages().then((value){
-                      setState(() {
-                        isFree = false;
+
+                    await authService.signInAnon().then((baseUser) async {
+                      await service.fetchRandomImages().then((value){
+                        setState(() {
+                          isFree = false;
+                        });
+                        print(baseUser.uid);
+                        context.read<UsersProvider>().setUser(baseUser);
+                        // context.read<SongTileProvider>().setUser(baseUser);
+                        context.read<ImagesProvider>().setImageUrls(value);
+                        Navigator.of(context).pushReplacementNamed("/home");
                       });
-                      context.read<ImagesProvider>().setImageUrls(value);
-                      Navigator.of(context).pushReplacementNamed("/home");
                     });
 
                   }
@@ -89,47 +88,14 @@ class _SignUpState extends State<SignUp> {
                   side: BorderSide(width: 1, color: Colors.green),
                   borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: CustomButton(
-                width: 300,
-                color: Colors.black,
-                height: 54,
-                onPressed: () async {
-                  if(!isFree&& !isGoogle ){
-                    setState(() {
-                      isEmailAndPassword = true;
-                    });
-
-                    await service.fetchRandomImages().then((value){
-                      setState(() {
-                        isEmailAndPassword = false;
-                      });
-                      context.read<ImagesProvider>().setImageUrls(value);
-                      Navigator.of(context).pushReplacementNamed("/home");
-                    });
-                  }
-                },
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(width: 1, color: Colors.white),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: isEmailAndPassword?Loading(color: Colors.white,) :Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: isFree?  Loading(): Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "icons/e_p.png",
-                      width: 30,
-                      height: 30,
-                    ),
-                    const SizedBox(width: 10),
                     Text(
-                      "Sign up with Email and Password",
+                      "Sign In Anonymously ",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 17,
                       ),
                     ),
@@ -137,8 +103,9 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
+
             Padding(
-              padding: const EdgeInsets.only(right: 30.0, left: 30, bottom: 20),
+              padding: const EdgeInsets.only(top: 30,right: 30.0, left: 30, bottom: 20),
               child: CustomButton(
                 width: 300,
                 color: Colors.black,
@@ -163,17 +130,22 @@ class _SignUpState extends State<SignUp> {
                   ],
                 ),
                 onPressed: ()async {
-                  if(!isFree&& !isEmailAndPassword ){
+                  if(!isFree){
                     setState(() {
                       isGoogle = true;
                     });
-                    await service.fetchRandomImages().then((value){
-                      setState(() {
-                        isGoogle = false;
+                    await authService.signInWithGoogle().then((baseUser) async {
+                      await service.fetchRandomImages().then((value){
+                        setState(() {
+                          isGoogle = false;
+                        });
+                        context.read<UsersProvider>().setUser(baseUser!);
+                        // context.read<SongTileProvider>().setUser(baseUser);
+                        context.read<ImagesProvider>().setImageUrls(value);
+                        Navigator.of(context).pushReplacementNamed("/home");
                       });
-                      context.read<ImagesProvider>().setImageUrls(value);
-                      Navigator.of(context).pushReplacementNamed("/home");
                     });
+
                   }
                 },
                 shape: RoundedRectangleBorder(
@@ -182,20 +154,7 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-            TextButton(
-              onPressed: () {
 
-                Navigator.of(context).pushReplacementNamed("/sign_in");
-              },
-              child: Text(
-                "Login",
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  fontSize: 21,
-                ),
-              ),
-            ),
           ],
         ),
       ),

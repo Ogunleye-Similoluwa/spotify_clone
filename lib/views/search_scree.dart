@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:spotify/controllers/providers/song_tile_provider.dart';
 import 'package:spotify/views/widgets/loading.dart';
 import 'package:spotify/views/widgets/song_tile.dart';
 
@@ -84,7 +85,7 @@ class _SearchScreenState extends State<SearchScreen> {
             isLoading = false;
             songs = [song];
           });
-      context.read<SongsProvider>().addRecentSong(song);
+      context.read<SongTileProvider>().addRecentSong(context,song);
     } catch (e) {
       print("Error fetching song: $e");
     }

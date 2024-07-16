@@ -1,4 +1,6 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:spotify/storage/firebase_cloud_store.dart';
 import '../../models/song.dart';
 import '../../storage/shared_prefrences.dart';
 
@@ -68,20 +70,20 @@ class SongsProvider extends ChangeNotifier {
   }
 
   Future<void> loadFavoriteSongs() async {
-    favoriteSongs = await SharedPrefs.getFavoriteSongs();
+    // favoriteSongs = await FirebaseStorageHelper.getFavoriteSongs();
     notifyListeners();
   }
 
   Future<void> loadRecentSongs() async {
-    recentSongs = await SharedPrefs.getRecentSongs();
+    // recentSongs = await FirebaseStorageHelper.getRecentSongs();
     notifyListeners();
   }
 
   Future<void> _saveFavoriteSongs() async {
-    await SharedPrefs.saveFavoriteSongs(favoriteSongs);
+    // await FirebaseStorageHelper.saveFavoriteSongs(favoriteSongs);
   }
 
   Future<void> _saveRecentSongs() async {
-    await SharedPrefs.saveRecentSongs(recentSongs);
+    // await FirebaseStorageHelper.saveRecentSongs(recentSongs);
   }
 }

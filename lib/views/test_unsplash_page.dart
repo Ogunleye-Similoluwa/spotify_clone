@@ -1,8 +1,15 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_core/firebase_core.dart';
+import '../firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -10,67 +17,54 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Random Images from Unsplash',
+      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: RandomImagesPage(),
+      home: SignInPage(),
     );
   }
+
+
+
+
 }
 
-class RandomImagesPage extends StatefulWidget {
-  @override
-  _RandomImagesPageState createState() => _RandomImagesPageState();
-}
 
-class _RandomImagesPageState extends State<RandomImagesPage> {
-  List<dynamic> imageUrls = [];
 
-  @override
-  void initState() {
-    super.initState();
-    fetchRandomImages();
-  }
-
-  Future<void> fetchRandomImages() async {
-    String accessKey = '4he1nuoxhw8dZFrYWYaqVXlLWT5BSkLvzw36Ma7mkCw';
-    int count = 7;
-    String query = 'music';
-    String apiUrl = 'https://api.unsplash.com/photos/random?client_id=$accessKey&query=$query&count=$count';
-
-    try {
-      var response = await http.get(Uri.parse(apiUrl));
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
-        List<dynamic> urls = data.map((item) => item['urls']['regular']).toList();
-        setState(() {
-          imageUrls = urls;
-        });
-      } else {
-        print('Failed to fetch images: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('Error fetching images: $e');
-    }
-  }
-
+class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Random Images from Unsplash'),
+        title: Text('Google Sign In'),
       ),
       body: Center(
-        child: imageUrls.isEmpty
-            ? CircularProgressIndicator()
-            : GridView.count(
-          crossAxisCount: 2,
-          children: imageUrls.map((url) {
-            return Image.network(url, fit: BoxFit.cover);
-          }).toList(),
+        child: ElevatedButton(
+          onPressed: () async {
+            UserCredential userCredential = await signInWithGoogle();
+            print(userCredential.user);
+          },
+          child: Text('Sign in with Google'),
         ),
       ),
     );
   }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Create a new provider
+    GoogleAuthProvider googleProvider = GoogleAuthProvider();
+
+    googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+    googleProvider.setCustomParameters({
+      'login_hint': 'user@example.com'
+    });
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithPopup(googleProvider);
+
+    // Or use signInWithRedirect
+    // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+  }
+
 }

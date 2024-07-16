@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_svg/svg.dart";
+import "package:provider/provider.dart";
 import "package:spotify/constants/media_query_constant/constants.dart";
+
+import "../models/baseUser.dart";
 
 
 
@@ -15,12 +18,27 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   void initState(){
-    Future.delayed(Duration(seconds: 3),(){
-      Navigator.of(context).pushReplacementNamed("/sign_up");
-    });
 
     super.initState();
   }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final baseUser = Provider.of<BaseUser?>(context);
+
+    if (baseUser?.name != null) {
+      Future.microtask(() {
+        Navigator.of(context).pushReplacementNamed("/home");
+      });
+    } else {
+      Future.delayed(Duration(seconds: 3), () {
+        Navigator.of(context).pushReplacementNamed("/sign_up");
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

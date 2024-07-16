@@ -78,10 +78,10 @@ class _GlobalSongPlayerState extends State<GlobalSongPlayer> {
                               });
                               if (song.isLiked!) {
                                 song.setIsLiked(song.isLiked!);
-                                context.read<SongsProvider>().addFavoriteSong(song);
+                                context.read<SongTileProvider>().addFavoriteSong(context,song);
                               } else {
                                 song.setIsLiked(song.isLiked!);
-                                context.read<SongsProvider>().removeFavoriteSong(song);
+                                context.read<SongTileProvider>().removeFavoriteSong(context,song);
                               }
 
 
@@ -100,7 +100,7 @@ class _GlobalSongPlayerState extends State<GlobalSongPlayer> {
                       ),
                     ),
                   ),
-                  _buildPlayerControls(songProvider),
+                  _buildPlayerControls(songProvider,context),
                   _buildProgressBar(songProvider),
                 ],
               ),
@@ -135,7 +135,7 @@ class _GlobalSongPlayerState extends State<GlobalSongPlayer> {
       ),
     );
   }
-  Widget _buildPlayerControls(SongTileProvider songProvider) {
+  Widget _buildPlayerControls(SongTileProvider songProvider, BuildContext context) {
     return StreamBuilder<PlayerState>(
       stream: songProvider.audioPlayer.playerStateStream,
       builder: (context, snapshot) {
@@ -150,29 +150,27 @@ class _GlobalSongPlayerState extends State<GlobalSongPlayer> {
           return IconButton(
             icon: const Icon(Icons.play_arrow),
             iconSize: 48,
-            onPressed: songProvider.playAudio
+            onPressed: () => songProvider.playAudio(context),
           );
         } else if (processingState != ProcessingState.completed) {
           return IconButton(
             icon: const Icon(Icons.pause),
             iconSize: 48,
-            onPressed: songProvider.pauseAudio,
+            onPressed: () => songProvider.pauseAudio(context),
           );
         } else {
           return IconButton(
             icon: const Icon(Icons.replay),
             iconSize: 48,
-            onPressed: () {
-              // songProvider.audioPlayer.seek(Duration.zero);
-              songProvider.replayAudio();
-            },
+            onPressed: () => songProvider.replayAudio(context),
           );
         }
       },
     );
   }
 
-    Widget _buildProgressBar(SongTileProvider songProvider) {
+
+  Widget _buildProgressBar(SongTileProvider songProvider) {
       return StreamBuilder<Duration?>(
 
         stream: songProvider.audioPlayer.positionStream,
@@ -180,7 +178,7 @@ class _GlobalSongPlayerState extends State<GlobalSongPlayer> {
           final position = snapshot.data ?? Duration.zero;
           final duration = songProvider.audioPlayer.duration ?? Duration.zero;
          Song newSong = Song(position: position);
-         context.read<SongTileProvider>().setCurrentSongPosition(newSong);
+
           return ProgressBar(
 
             progressBarColor: Colors.green,

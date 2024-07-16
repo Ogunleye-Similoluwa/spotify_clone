@@ -22,8 +22,8 @@ class _SongTileState extends State<SongTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Provider.of<SongTileProvider>(context, listen: false).setCurrentSong(widget.song);
-        Provider.of<SongTileProvider>(context, listen: false).playAudio();
+        Provider.of<SongTileProvider>(context, listen: false).setCurrentSong(context,widget.song);
+        Provider.of<SongTileProvider>(context, listen: false).playAudio(context);
       },
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -46,12 +46,12 @@ class _SongTileState extends State<SongTile> {
                   widget.song.setIsLiked(isLiked);
                 });
 
-                context.read<SongsProvider>().addFavoriteSong(widget.song);
+                context.read<SongTileProvider>().addFavoriteSong(context,widget.song);
               } else {
                 setState(() {
                   widget.song.setIsLiked(isLiked);
                 });
-                context.read<SongsProvider>().removeFavoriteSong(widget.song);
+                context.read<SongTileProvider>().removeFavoriteSong(context,widget.song);
               }
             },
           ),
