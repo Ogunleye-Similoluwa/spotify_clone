@@ -27,8 +27,7 @@ void main()async {
       providers: [
         StreamProvider<BaseUser?>.value(
           value: AuthService().baseUser,
-          initialData: BaseUser(uid: ''),
-          // lazy: true,
+          initialData: null,
         ),
         ChangeNotifierProvider(create: (context) => SongTileProvider(context)),
         ChangeNotifierProvider(create: (_) => SongsProvider()),

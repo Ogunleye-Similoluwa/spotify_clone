@@ -51,7 +51,7 @@ Song({this.name, this.artistName, this.musicName, this.position, this.image, thi
     final artistList =  data["spotifyTrack"]["artists"]  as List;
     String artistNames="";
     for(var i =0; i < artistList.length; i++){
-      if(artistList.length > 1){
+      if(artistList.length <= 1){
         artistNames = artistList[i]["name"];
       }
       else{

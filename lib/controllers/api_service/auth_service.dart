@@ -61,11 +61,9 @@ class AuthService{
 
   ///
 
-  Future signOut (BaseUser user)async{
+  Future signOut ()async{
     try{
-      if(!user.isAnonymous!){
-        // await signIn.disconnect();
-      }
+      print("About to sign out");
       return await _auth.signOut();
     }catch(e){
       return null;

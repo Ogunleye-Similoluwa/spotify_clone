@@ -74,7 +74,6 @@ class _SignUpState extends State<SignUp> {
                         setState(() {
                           isFree = false;
                         });
-                        print(baseUser.uid);
                         context.read<UsersProvider>().setUser(baseUser);
                         // context.read<SongTileProvider>().setUser(baseUser);
                         context.read<ImagesProvider>().setImageUrls(value);

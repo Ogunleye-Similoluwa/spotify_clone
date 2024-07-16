@@ -165,10 +165,15 @@ void setUser(String user){
                           style: GoogleFonts.aleo(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
 
-                        IconButton(onPressed: (){
+                        IconButton(onPressed: () async{
                           AuthService service = AuthService();
-                          service.signOut(baseUser!);
-                          Navigator.pushReplacementNamed(context, "/sign_up");
+                          await service.signOut().whenComplete((){
+                            setState(() {
+                              print("Signed Out");
+                            });
+                          });
+                         context.watch<SongTileProvider>().dispose();
+
                         }, icon: Icon(Icons.logout,size: 30,),color: Colors.white, )
                       ],
                     ),

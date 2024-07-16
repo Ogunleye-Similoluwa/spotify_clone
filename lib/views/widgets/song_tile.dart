@@ -33,12 +33,14 @@ class _SongTileState extends State<SongTile> {
           leading: Image.network(widget.song.image ?? "images/spotify.png",),
           trailing: IconButton(
             icon: Icon(
-              isLiked ? Icons.favorite : Icons.favorite_border,
+              isLiked ? Icons.play_arrow : Icons.play_circle_outline,
               color: isLiked ? Colors.green : Colors.grey,
             ),
             onPressed: () {
               setState(() {
                 isLiked = !isLiked;
+                Provider.of<SongTileProvider>(context, listen: false).setCurrentSong(context,widget.song);
+                Provider.of<SongTileProvider>(context, listen: false).playAudio(context);
               });
 
               if (isLiked) {
